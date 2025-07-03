@@ -1,0 +1,8 @@
+---
+import Layout from "../layouts/Layout.astro";
+import VideosComponent from "../components/Videos.svelte";
+---
+
+<Layout title="Home">
+  <VideosComponent client:only="svelte" />
+</Layout>

@@ -1,0 +1,24 @@
+---
+export async function getStaticPaths() {
+  const allPoems = Object.entries(
+    import.meta.glob('../../../../pages/content/poetry/*.md', { eager: true })
+  );
+
+  return allPoems.map(([path, poem]) => {
+    const slug = (path.split('/')?.pop() || '').replace('.md', '');
+    return {
+      params: { slug },
+      props: { poem, slug }
+    };
+  });
+}
+
+const { poem, slug } = Astro.props;
+const { frontmatter, default: Content } = poem as any;
+---
+
+<article class="poem-post">
+  <h1>{frontmatter.title}</h1>
+  {frontmatter.author && <p class="author">{frontmatter.author}</p>}
+  <Content />
+</article> 

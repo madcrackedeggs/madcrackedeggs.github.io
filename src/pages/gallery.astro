@@ -1,0 +1,24 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Gallery from "../components/Gallery.svelte";
+const allImages = Object.entries(
+  import.meta.glob("./content/gallery/*.md", { eager: true })
+).map(([path, post]) => {
+  if (typeof post === "object" && post !== null) {
+    const slug = path?.split("/")?.pop()?.replace(".md", "") ?? "";
+    return {
+      ...(post as Record<string, any>),
+      slug,
+    };
+  }
+  return {};
+});
+---
+
+<Layout title="Home">
+  <Gallery
+					class="gallery"
+					client:only
+					allImages={allImages}
+				/>
+</Layout>

@@ -1,0 +1,133 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const vinyls = [
+  // here you would add your albums. image must be a link to the album art. redirects must be a list of links to the album on spotify/youtube/bandcamp.
+  {
+    title: 'Vinyl 1',
+    image: '/example_cover.jpg',
+    redirects: ["https://www.youtube.com/watch?v=6POZlJAZsok", "https://open.spotify.com/intl-es/track/0QMHVTnrFTQJoaqmkdsKhT?si=d65e67ca7aa044d0"]
+  },
+  {
+    title: 'Vinyl 2',
+    image: '/example_cover.jpg',
+    redirects: ["https://www.youtube.com/watch?v=6POZlJAZsok", "https://open.spotify.com/intl-es/track/0QMHVTnrFTQJoaqmkdsKhT?si=d65e67ca7aa044d0"]
+  },
+  {
+    title: 'Vinyl 3',
+    image: '/example_cover.jpg',
+    redirects: ["https://www.youtube.com/watch?v=6POZlJAZsok", "https://open.spotify.com/intl-es/track/0QMHVTnrFTQJoaqmkdsKhT?si=d65e67ca7aa044d0"]
+  },
+]
+---
+
+<Layout>
+  <h1 style="margin-bottom: 2rem;">My Music</h1>
+  <div class="bookshelf">
+    {vinyls.map((vinyl, index) => (
+      <div class="vinyl" style={`z-index: ${vinyls.length - index}`}>  
+        <img src={`${vinyl.image}`} alt={vinyl.title} />
+        <div class="links">
+          {vinyl.redirects.map((url) => (
+            <a href={url} target="_blank" rel="noopener noreferrer">
+              {url.includes('spotify') ? 'Spotify' : url.includes('youtube') ? 'YouTube' : url.includes('bandcamp') ? 'Bandcamp' : 'Link'}
+            </a>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+  <style>
+    .bookshelf {
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: row;
+      gap: 0;
+      perspective: 300px;
+      padding: 2vh;
+    }
+
+    .vinyl {
+      width: 150px;
+      height: 150px;
+      background-color: #f0f0f0;
+      border: 1px solid #000;
+      outline: 1px solid #FFF;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      transform-origin: left center;
+      transform: rotateY(-25deg);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .vinyl:not(:first-child) {
+      margin-left: -50px;
+    }
+
+    .vinyl:hover {
+      transform: rotateY(0deg);
+      scale: 1.1;
+      z-index: 200000;
+    }
+
+    .vinyl .links {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.9);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .vinyl .links a {
+      text-decoration: none;
+      color: #000;
+      font-weight: bold;
+    }
+
+    .vinyl.open {
+      z-index: 1000;
+    }
+
+    .vinyl.open .links {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .vinyl img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  </style>
+
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.vinyl').forEach((el) => {
+        el.addEventListener('mouseenter', (e) => {
+          if (e.target.closest('a')) return;
+
+          document.querySelectorAll('.vinyl.open').forEach((v) => {
+            if (v !== el) v.classList.remove('open');
+          });
+
+          el.classList.add('open');
+        });
+
+        el.addEventListener('mouseleave', () => {
+          el.classList.remove('open');
+        });
+      });
+    });
+  </script>
+</Layout>

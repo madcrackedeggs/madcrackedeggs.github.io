@@ -1,0 +1,22 @@
+---
+import Layout from "../layouts/Layout.astro";
+import PoetryGallery from "../components/Poetry.svelte";
+
+const allPoems = Object.entries(
+  import.meta.glob("./content/poetry/*.md", { eager: true })
+).map(([path, poem]) => {
+  if (typeof poem === "object" && poem !== null) {
+    const slug = path?.split("/")?.pop()?.replace(".md", "") ?? "";
+    return {
+      ...(poem as Record<string, any>),
+      slug,
+    };
+  }
+  return {};
+});
+---
+
+<Layout title="Poetry">
+  <h1 style="margin-bottom:2rem;">My Poetry</h1>
+  <PoetryGallery client:only allPoems={allPoems} />
+</Layout>

@@ -1,0 +1,25 @@
+---
+export async function getStaticPaths() {
+  const allPosts = Object.entries(
+    import.meta.glob('../../content/blog/*.md', { eager: true })
+  );
+
+  return allPosts.map(([path, post]) => {
+    const slug = path.split('/').pop().replace('.md', '');
+    return {
+      params: { slug },
+      props: { post, slug }
+    };
+  });
+}
+
+const { post, slug } = Astro.props;
+const { frontmatter, default: Content } = post as any;
+import Blog from "../../components/Blog.svelte";
+---
+
+<article class="blog-post">
+  <h1>{frontmatter.title}</h1>
+  <p class="date">{frontmatter.date}</p>
+  <Content />
+</article>

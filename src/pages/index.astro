@@ -1,0 +1,21 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Blog from "../components/Blog.svelte";
+const allPosts = Object.entries(
+  import.meta.glob("./content/blog/*.md", { eager: true })
+).map(([path, post]) => {
+  if (typeof post === "object" && post !== null) {
+    const slug = path?.split("/")?.pop()?.replace(".md", "") ?? "";
+    return {
+      ...(post as Record<string, any>),
+      slug,
+    };
+  }
+  return {};
+});
+---
+
+<Layout title="Home">
+  <h1>Welcome!!1!</h1>
+  <p>Hi there! My name is Madeline. Here I will write a short description about myself, maybe a bit about earthbound and my likings, and also yap about my favorites (I love EarthBound, of course!).</p>
+</Layout>
